@@ -1,28 +1,69 @@
-from rest_framework import views, generics
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets, generics, permissions
 
-from .serializers import DishSer, DishDetailSer, CategorySer
-from .models import Category, Dish
+from .serializers import (
+    CategorySer, DishSer, DishDetSer,
+    DesertSer, DesertDetSer,
+    DrinkSer, DrinkDetSer,
+    )
+from .models import Category, Dish, Desert, Drink
 
 class Home(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySer
 
 
-class DishView(generics.ListAPIView):
-    serializer_class = DishSer
+from rest_framework import viewsets, permissions
+
+class DishViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
-        queryset = Dish.objects.all()
-        category = self.kwargs.get("category")
+        qs = Dish.objects.select_related("category")
+        category_slug = self.request.query_params.get("category")
+        if category_slug:
+            qs = qs.filter(category__slug=category_slug)
+        return qs
 
-        if category:
-            queryset = queryset.filter(category__slug=category)
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return DishDetSer
+        return DishSer
 
-        return queryset
+    lookup_field = "slug"
 
 
-class DishDetailView(generics.RetrieveAPIView):
-    queryset = Dish.objects.all()
-    serializer_class = DishSer
+class DesertViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAdminUser]
+
+    def get_queryset(self):
+        qs = Desert.objects.select_related("category")
+        category_slug = self.request.query_params.get("category")
+        if category_slug:
+            qs = qs.filter(category_slug=category_slug)
+        return qs
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return DesertDetSer
+        return DesertSer
+
+    lookup_field = "slug"
+
+
+class DrinkViewSet(viewsets.ModelViewSet):
+    permissions_classes = [permissions.IsAdminUser]
+
+    def get_queryset(self):
+        qs = Drink.objects.select_related("category")
+        category_slug = self.request.query_params.get("category")
+        if category_slug:
+            qs = qs.filter(category_slug=category_slug)
+        return qs
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return DrinkDetSer
+        return DrinkSer
+
     lookup_field = "slug"

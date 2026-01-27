@@ -7,27 +7,45 @@ class Base(models.Model):
     category = models.ForeignKey(
         'shop.Category',
         on_delete=models.CASCADE,
-        related_name="%(class)s_items",  # Автоматически подставит drink_items, food_items и т.д.
+        related_name="%(class)s_items",
         verbose_name="Категория"
     )
     title = models.CharField(max_length=255, verbose_name="Название")
     description = models.TextField(blank=True, verbose_name="Описание")
     ingredients = models.TextField(blank=True, verbose_name="Состав")
-    mass_ingredients = models.TextField(blank=True, verbose_name="Состав/Вес (г)")
-    weight = models.PositiveIntegerField(null=True, blank=True, verbose_name="Вес (г)")
+    mass_ingredients = models.TextField(
+        null=True, blank=True,
+        verbose_name="Состав/Вес (г)",
+    )
+    weight = models.PositiveIntegerField(
+        null=True, blank=True,
+        verbose_name="Вес (г)",
+    )
 
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
+    price = models.DecimalField(
+        max_digits=10, decimal_places=2,
+        verbose_name="Цена",
+    )
     discount_price = models.DecimalField(
         max_digits=10, decimal_places=2,
         null=True, blank=True,
         verbose_name="Цена со скидкой"
     )
 
-    is_available = models.BooleanField(default=True, verbose_name="В наличии")
-    stock = models.PositiveIntegerField(default=0, verbose_name="Остаток на складе")
-    is_bestseller = models.BooleanField(default=False, verbose_name="Хит продаж")
+    is_available = models.BooleanField(
+        default=True, verbose_name="В наличии",
+    )
+    stock = models.PositiveIntegerField(
+        default=0, verbose_name="Остаток на складе",
+    )
+    is_bestseller = models.BooleanField(
+        default=False, verbose_name="Хит продаж",
+    )
 
-    image = models.ImageField(upload_to='products/%Y/%m/', blank=True, verbose_name="Фото")
+    image = models.ImageField(
+        upload_to='products/%Y/%m/', blank=True,
+        verbose_name="Фото",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -35,7 +53,7 @@ class Base(models.Model):
 
 
 class TeaType(models.Model):
-    name = models.CharField(max_length=100, verbose_name="Тип чая (Зеленый, Улун...)")
+    name = models.CharField(max_length=100, verbose_name="Тип чая")
 
     class Meta:
         verbose_name = "Тип чая"

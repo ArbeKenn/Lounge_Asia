@@ -15,6 +15,11 @@ class Category(models.Model):
 class Dish(Base):
     slug = models.SlugField(unique=True)
 
+    class Meta:
+        verbose_name = "Блюда"
+        verbose_name_plural = "Блюды"
+        ordering = ['-created_at']
+
     def __str__(self):
         return f"{self.title} - {self.price} сом."
 
@@ -35,6 +40,10 @@ class Desert(Base):
         verbose_name="Количество кусочков/порций",
     )
 
+    class Meta:
+        verbose_name = "Десерт"
+        verbose_name_plural = "Десерты"
+        ordering = ['-created_at']
 
     def __str__(self):
         return f"{self.title} - {self.price} сом."
