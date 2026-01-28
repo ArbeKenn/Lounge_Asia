@@ -2,8 +2,9 @@ from rest_framework import serializers
 from .models import Category, Dish, Desert, Drink
 
 class CategorySer(serializers.ModelSerializer):
-    model = Category
-    fields = "__all__"
+    class Meta:
+        model = Category
+        fields = "__all__"
 
 
 class BaseSer(serializers.ModelSerializer):
@@ -24,7 +25,7 @@ class DishDetSer(BaseSer):
         price = data.get("price", getattr(self.instance, "price", None))
         weight = data.get("weight", getattr(self.instance, "weight", None))
 
-        if price>1000 and weight<50:
+        if price is not None and weight is not None and price > 1000 and weight < 50:
             raise serializers.ValidationError("Нелогичные данные")
 
         return data
@@ -39,12 +40,12 @@ class DesertSer(BaseSer):
         model = Desert
         fields = ('title','weight','calories','image','price')
 
-class DesertDetSer(serializers.ModelSerializer):
+class DesertDetSer(BaseSer):
     def validate(self, data):
         price = data.get("price", getattr(self.instance, "price", None))
         weight = data.get("weight", getattr(self.instance, "weight", None))
 
-        if price>1000 and weight<50:
+        if price is not None and weight is not None and price > 1000 and weight < 50:
             raise serializers.ValidationError("Нелогичные данные")
 
         return data
@@ -60,12 +61,12 @@ class DrinkSer(BaseSer):
         fields = ('title','weight','tea_type','volume','image','price')
 
 
-class DrinkDetSer(serializers.ModelSerializer):
+class DrinkDetSer(BaseSer):
     def validate(self, data):
         price = data.get("price", getattr(self.instance, "price", None))
         volume = data.get("volume", getattr(self.instance, "volume", None))
 
-        if price > 1000 and volume < 50:
+        if price is not None and volume is not None and price > 1000 and volume < 50:
             raise serializers.ValidationError("Нелогичные данные")
 
         return data

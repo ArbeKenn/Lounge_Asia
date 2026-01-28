@@ -17,7 +17,7 @@ class Dish(Base):
 
     class Meta:
         verbose_name = "Блюда"
-        verbose_name_plural = "Блюды"
+        verbose_name_plural = "Блюда"
         ordering = ['-created_at']
 
     def __str__(self):
@@ -29,10 +29,6 @@ class Desert(Base):
     calories = models.PositiveIntegerField(
         null=True, blank=True,
         verbose_name="Калорийность (ккал/100г)",
-    )
-    mass_ingredients = models.TextField(
-        null=True, blank=True,
-        verbose_name="Состав/Вес (г)",
     )
     pieces = models.PositiveIntegerField(
         null=True, blank=True,

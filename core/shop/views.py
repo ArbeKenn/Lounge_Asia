@@ -12,11 +12,8 @@ class Home(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySer
 
-
-from rest_framework import viewsets, permissions
-
 class DishViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAdminUser]
 
     def get_queryset(self):
         qs = Dish.objects.select_related("category")
@@ -40,7 +37,7 @@ class DesertViewSet(viewsets.ModelViewSet):
         qs = Desert.objects.select_related("category")
         category_slug = self.request.query_params.get("category")
         if category_slug:
-            qs = qs.filter(category_slug=category_slug)
+            qs = qs.filter(category__slug=category_slug)
         return qs
 
     def get_serializer_class(self):
@@ -52,13 +49,13 @@ class DesertViewSet(viewsets.ModelViewSet):
 
 
 class DrinkViewSet(viewsets.ModelViewSet):
-    permissions_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAdminUser]
 
     def get_queryset(self):
         qs = Drink.objects.select_related("category")
         category_slug = self.request.query_params.get("category")
         if category_slug:
-            qs = qs.filter(category_slug=category_slug)
+            qs = qs.filter(category__slug=category_slug)
         return qs
 
     def get_serializer_class(self):
