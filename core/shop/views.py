@@ -1,5 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, generics, permissions
+from rest_framework import viewsets, filters, permissions
+import django_filters
 
 from .serializers import (
     CategorySer, DishSer, DishDetSer,
@@ -17,12 +18,24 @@ class MenuBaseViewSet(viewsets.ModelViewSet):
         return [permissions.IsAdminUser()]
 
 
+class DishFilter(django_filters.FilterSet):
+    min_price = django_filters.NumberFilter(field_name="price", lookup_expr="gte")
+    max_price = django_filters.NumberFilter(field_name="price", lookup_expr="lte")
+
+    class Meta:
+        model = Dish
+        fields = ["min_price", "max_price", "is_bestseller"]
+
+
 class Home(MenuBaseViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySer
 
 
 class DishViewSet(MenuBaseViewSet):
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_class = DishFilter
+    search_fields = ["title", "category__title"]
 
     def get_queryset(self):
         qs = Dish.objects.select_related("category")
