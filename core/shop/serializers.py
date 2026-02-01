@@ -23,10 +23,16 @@ class DishSer(BaseSer):
 class DishDetSer(BaseSer):
     def validate(self, data):
         price = data.get("price", getattr(self.instance, "price", None))
+        discount_price = data.get("discount_price", getattr(self.instance, "discount_price", None))
         weight = data.get("weight", getattr(self.instance, "weight", None))
+
 
         if price is not None and weight is not None and price > 1000 and weight < 50:
             raise serializers.ValidationError("Нелогичные данные")
+
+        if discount_price >= price:
+            if price is not None and weight is not None and discount_price > 1000 and weight < 50:
+                raise serializers.ValidationError("Скидочная цена должна быть меньше основной")
 
         return data
 
