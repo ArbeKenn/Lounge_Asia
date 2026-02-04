@@ -35,7 +35,7 @@ class Base(models.Model):
     is_available = models.BooleanField(
         default=True, verbose_name="В наличии",
     )
-    stock = models.PositiveIntegerField(
+    quantity = models.PositiveIntegerField(
         default=0, verbose_name="Остаток на складе",
     )
     is_bestseller = models.BooleanField(

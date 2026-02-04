@@ -1,5 +1,5 @@
 from django.db import models
-from shop.constants.models import Base, TeaType
+from shop.constants.c_models import Base, TeaType
 
 class Category(models.Model):
     title = models.CharField(max_length=100, verbose_name="Категория")

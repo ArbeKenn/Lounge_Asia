@@ -5,8 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7cf310f8-cabb-4854-a596-582a1759a7fa" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/core/orders/choices.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/shop/constants/c_views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/shop/constants/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/shop/constants/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/orders/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/orders/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/shop/constants/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/shop/constants/c_models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/shop/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/shop/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/shop/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/shop/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
