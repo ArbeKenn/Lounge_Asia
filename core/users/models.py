@@ -34,6 +34,8 @@ class MyUsersManager(BaseUserManager):
         user.is_admin = True
         user.is_staff = True
         user.superuser = True
+        user.save(using=self._db)
+        return user
 
 class User(AbstractBaseUser):
     email = models.EmailField(max_length=60, unique=True)
@@ -41,13 +43,16 @@ class User(AbstractBaseUser):
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
     is_admin = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    bio = models.TextField(max_length=2000)
-    age = models.DateField(default=datetime.date.today)
-    gender = models.CharField(choices=GENDER_CHOICES,)
+    bio = models.TextField(max_length=2000, blank=True)
+    age = models.PositiveSmallIntegerField(max_length=3)
+    gender = models.CharField(
+        choices=GENDER_CHOICES, max_length=1,
+        blank=True, null=True
+    )
     profile_pic = models.ImageField(
         upload_to='image/user_profile',
         blank=True, null=True
