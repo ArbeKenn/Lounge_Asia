@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from serializers import UserRegSer, UserLogSer
+from models import MyUsersManager, User
 
-# Create your views here.
+class UserRegView(viewsets):
+    pass
+
+
+class UserLogView(viewsets):
+    pass
