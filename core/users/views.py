@@ -1,10 +1,24 @@
+from rest_framework import generics, permissions
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework import viewsets
-from serializers import UserRegSer, EmailTokenObtainPairSerializer
-from models import MyUsersManager, User
 
-class UserRegView(viewsets):
-    pass
+from .models import User
+from .serializers import (
+    UserRegisterSerializer,
+    UserDetailSerializer,
+    EmailTokenObtainPairSerializer,
+)
+
+class UserRegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserRegisterSerializer
+    permission_classes = [permissions.AllowAny]
 
 class EmailTokenObtainPairView(TokenObtainPairView):
     serializer_class = EmailTokenObtainPairSerializer
+
+class MyProfileView(generics.RetrieveAPIView):
+    serializer_class = UserDetailSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user

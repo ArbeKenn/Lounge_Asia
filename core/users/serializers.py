@@ -1,46 +1,26 @@
-from django.contrib.auth import authenticate
 from rest_framework import serializers
-from models import MyUsersManager, User
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from .models import User
 
-class UserSer(serializers.Serializer):
+class UserPublicSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'firstname','lastname']
+        fields = ["id", "username", "email", "first_name", "last_name"]
 
-class MyUserDetSer(serializers.Serializer):
+class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = "__all__"
 
+class UserRegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
 
-class UserRegSer(serializers.Serializer):
     class Meta:
         model = User
-        fields = ['username','email','password']
-        extra_kwargs = {'password':{'write_only':True}}
+        fields = ["email", "username", "first_name", "last_name", "age", "password"]
 
     def create(self, validated_data):
-        user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            password=validated_data['password'],
-        )
-        return user
+        return User.objects.create_user(**validated_data)
 
-
-class UserLogSer(serializers.Serializer):
-    class Meta:
-        model = User
-        email = serializers.CharField(max_length=255)
-        password = serializers.CharField(max_length=128, write_only=True)
-
-    def validate(self, data):
-        email = data.get('email', None)
-        password = data.get('password', None)
-        if email and password:
-            user = authenticate(username=email, password=password)
-            if user:
-                data['user'] = user
-
-            data['user'] = user
-        return data
+class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
+    username_field = "email"

@@ -11,7 +11,7 @@ from .serializers import (
 from .models import Category, Dish, Desert, Drink
 
 
-class Home(MenuBaseViewSet):
+class HomeViewSet(MenuBaseViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySer
 
