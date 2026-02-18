@@ -4,7 +4,11 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from users.choices import GENDER_CHOICES
 
 class MyUsersManager(BaseUserManager):
-    def create_user(self, email, username, first_name, last_name, age, password=None, **extra_fields):
+    def create_user(
+            self, email, username,
+            first_name, last_name, age,
+            password=None, **extra_fields
+    ):
         if not email:
             raise ValueError("Users must have email address")
         if not username:
@@ -23,8 +27,16 @@ class MyUsersManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, username, first_name, last_name, age, password=None, **extra_fields):
-        user = self.create_user(email, username, first_name, last_name, age, password, **extra_fields)
+    def create_superuser(
+            self, email, username,
+            first_name, last_name, age,
+            password=None, **extra_fields
+    ):
+        user = self.create_user(
+            email, username,
+            first_name, last_name, age,
+            password, **extra_fields
+        )
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
@@ -33,7 +45,10 @@ class MyUsersManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=60, unique=True)
     username = models.CharField(max_length=16, unique=True)
-    phone = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    phone = models.CharField(
+        max_length=20, unique=True,
+        null=True, blank=True
+    )
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
 
@@ -45,8 +60,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     bio = models.TextField(max_length=2000, blank=True)
     age = models.PositiveSmallIntegerField()
 
-    gender = models.CharField(choices=GENDER_CHOICES, max_length=1, blank=True, null=True)
-    profile_pic = models.ImageField(upload_to="image/user_profile", blank=True, null=True)
+    gender = models.CharField(
+        choices=GENDER_CHOICES, max_length=1,
+        blank=True, null=True
+    )
+    profile_pic = models.ImageField(
+        upload_to="image/user_profile",
+        blank=True, null=True
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "first_name", "last_name", "age"]
