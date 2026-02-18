@@ -14,10 +14,20 @@ class Order(models.Model):
         null=True, blank=True,
         verbose_name="Пользователь",
     )
-    total_price = models.DecimalField("Общая сумма", max_digits=10, decimal_places=2, default=0)
-    status = models.CharField("Статус заказа", max_length=20, choices=STATUS_CHOICES, default="created")
-    created_at = models.DateTimeField("Время создания", auto_now_add=True)
-    id_transition = models.IntegerField("ID транзакции", null=True, blank=True)
+    total_price = models.DecimalField(
+        "Общая сумма", max_digits=10,
+        decimal_places=2, default=0
+    )
+    status = models.CharField(
+        "Статус заказа", max_length=20,
+        choices=STATUS_CHOICES, default="created"
+    )
+    created_at = models.DateTimeField(
+        "Время создания", auto_now_add=True
+    )
+    id_transition = models.IntegerField(
+        "ID транзакции", null=True, blank=True
+    )
 
     class Meta:
         verbose_name = "Заказ"
@@ -43,10 +53,18 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, verbose_name="Заказ", on_delete=models.CASCADE, related_name="items")
-    dish = models.ForeignKey(Dish, on_delete= models.CASCADE, verbose_name="Позиция",)
+    order = models.ForeignKey(
+        Order, verbose_name="Заказ",
+        on_delete=models.CASCADE, related_name="items"
+    )
+    dish = models.ForeignKey(
+        Dish, verbose_name="Позиция",
+        on_delete= models.CASCADE
+    )
     quantity = models.PositiveIntegerField("Количество", default=1)
-    price = models.DecimalField("Цена на момент заказа", max_digits=10, decimal_places=2)
+    price = models.DecimalField("Цена на момент заказа",
+                                max_digits=10, decimal_places=2
+                                )
 
     class Meta:
         verbose_name = "Позиция заказа"
