@@ -36,7 +36,7 @@ class DishViewSet(MenuBaseViewSet):
 
 class DesertViewSet(MenuBaseViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filter_class = DesertFilter
+    filterset_class = DesertFilter
     search_fields = ["title", "category__title"]
 
     def get_queryset(self):
@@ -54,7 +54,7 @@ class DesertViewSet(MenuBaseViewSet):
 
 class DrinkViewSet(MenuBaseViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filter_class = DrinkFilter
+    filterset_class = DrinkFilter
     search_fields = ["title", "category__title"]
 
     def get_queryset(self):
