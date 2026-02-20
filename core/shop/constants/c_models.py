@@ -49,7 +49,7 @@ class Base(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        self.is_available = self.stock > 0
+        self.is_available = self.quantity > 0
         super().save(*args, **kwargs)
 
     def __str__(self):
