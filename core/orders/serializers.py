@@ -10,7 +10,7 @@ class OrderItemReadSer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderItem
-        field = "__all__"
+        fields = "__all__"
 
 
 class OrderItemWriteSer(serializers.Serializer):

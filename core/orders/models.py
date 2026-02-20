@@ -1,4 +1,4 @@
-from shop.models import Dish
+from shop.models import Dish, Drink, Desert
 from .choices import STATUS_CHOICES
 
 from decimal import Decimal
@@ -60,6 +60,14 @@ class OrderItem(models.Model):
     dish = models.ForeignKey(
         Dish, verbose_name="Позиция",
         on_delete= models.CASCADE
+    )
+    desert = models.ForeignKey(
+        Desert, verbose_name="Позиция",
+        on_delete=models.CASCADE
+    )
+    drink = models.ForeignKey(
+        Drink, verbose_name="Позиция",
+        on_delete=models.CASCADE
     )
     quantity = models.PositiveIntegerField("Количество", default=1)
     price = models.DecimalField("Цена на момент заказа",
