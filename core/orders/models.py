@@ -1,5 +1,5 @@
 from shop.models import Dish, Drink, Desert
-from .choices import STATUS_CHOICES
+from .choices import DeliveryType, STATUS_CHOICES
 
 from decimal import Decimal
 from django.db import models
@@ -14,6 +14,12 @@ class Order(models.Model):
         null=True, blank=True,
         verbose_name="Пользователь",
     )
+    delivery_type = models.CharField(
+        "Тип", max_length=16,
+        choices=DeliveryType.choices,
+        default=DeliveryType.PICKUP,
+        db_index=True,
+    )
     total_price = models.DecimalField(
         "Общая сумма", max_digits=10,
         decimal_places=2, default=0
@@ -21,6 +27,9 @@ class Order(models.Model):
     status = models.CharField(
         "Статус заказа", max_length=20,
         choices=STATUS_CHOICES, default="created"
+    )
+    paid_at = models.DateTimeField(
+        "Оплачен в", null=True, blank=True
     )
     created_at = models.DateTimeField(
         "Время создания", auto_now_add=True
