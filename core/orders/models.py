@@ -1,4 +1,4 @@
-from shop.models import Dish, Drink, Desert
+from shop.models import Menu
 from .choices import DeliveryType, STATUS_CHOICES
 
 from decimal import Decimal
@@ -66,32 +66,21 @@ class OrderItem(models.Model):
         Order, verbose_name="Заказ",
         on_delete=models.CASCADE, related_name="items"
     )
-    dish = models.ForeignKey(
-        Dish, verbose_name="Позиция",
-        on_delete= models.CASCADE
+    menu = models.ForeignKey(
+        Menu, verbose_name="Заказ",
+        on_delete=models.CASCADE, related_name="order_items"
     )
-    desert = models.ForeignKey(
-        Desert, verbose_name="Позиция",
-        on_delete=models.CASCADE
+    quantity = models.PositiveIntegerField(
+        verbose_name="Количество", default=1
     )
-    drink = models.ForeignKey(
-        Drink, verbose_name="Позиция",
-        on_delete=models.CASCADE
+    price = models.DecimalField(
+        verbose_name="Цена на момент заказа",
+        max_digits=10, decimal_places=2
     )
-    quantity = models.PositiveIntegerField("Количество", default=1)
-    price = models.DecimalField("Цена на момент заказа",
-                                max_digits=10, decimal_places=2
-                                )
 
     class Meta:
         verbose_name = "Позиция заказа"
         verbose_name_plural = "Позиции заказа"
 
     def __str__(self):
-        return f"{self.quantity} × {self.dish.title}"
-
-    def save(self, *args, **kwargs):
-        if not self.price:
-            self.price = self.dish.price
-        super().save(*args, **kwargs)
-        self.order.update_total_price()
+        return f"{self.quantity} × {self.menu.title}"

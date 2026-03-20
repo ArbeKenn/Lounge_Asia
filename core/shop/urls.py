@@ -6,7 +6,7 @@ from rest_framework.routers import DefaultRouter
 from .views import HomeViewSet, MenuViewSet
 
 router = DefaultRouter()
-router.register(r"menu/dishes", MenuViewSet, basename="dish")
+router.register(r"menu", MenuViewSet, basename="menu")
 
 urlpatterns = [
     path("", HomeViewSet.as_view({"get": "list"}), name="home"),

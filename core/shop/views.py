@@ -20,11 +20,18 @@ class MenuViewSet(MenuBaseViewSet):
     search_fields = ["title", "category__title"]
 
     def get_queryset(self):
-        qs = Menu.objects.select_related("category")
-        category_slug = self.request.query_params.get("category")
-        if category_slug:
-            qs = qs.filter(category__slug=category_slug)
-        return qs
+        qs = Menu.objects.select_related("category").all()
+
+        item_type = self.request.query_params.get("item_type")
+        category = self.request.query_params.get("category")
+
+        if item_type:
+            qs = qs.filter(item_type=item_type)
+
+        if category:
+            qs = qs.filter(category_id=category)
+
+        return qs.order_by("id")
 
     def get_serializer_class(self):
         if self.action == "retrieve":

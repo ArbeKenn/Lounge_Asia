@@ -1,4 +1,6 @@
 from django.db import models
+from rest_framework.exceptions import ValidationError
+
 
 class Base(models.Model):
     CATEGORY_CHOICES = (
@@ -80,7 +82,22 @@ class Base(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def clean(self):
+        errors = {}
+
+        if self.item_type == "drink":
+            if not self.volume:
+                errors["volume"] = "Для напитка нужно указать объём."
+
+        elif self.item_type in ("dish", "desert"):
+            if not self.weight:
+                errors["desert"] = "Для блюда и десерта нужно указать вес."
+
+        if errors:
+            raise ValidationError(errors)
+
     def save(self, *args, **kwargs):
+        self.full_clean()
         self.is_available = self.quantity > 0
         super().save(*args, **kwargs)
 
