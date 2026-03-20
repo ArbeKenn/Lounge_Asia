@@ -3,12 +3,10 @@ from django.conf.urls.static import static
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from .views import HomeViewSet, DishViewSet, DesertViewSet, DrinkViewSet
+from .views import HomeViewSet, MenuViewSet
 
 router = DefaultRouter()
-router.register(r"menu/dishes", DishViewSet, basename="dish")
-router.register(r"menu/deserts", DesertViewSet, basename="desert")
-router.register(r"menu/drinks", DrinkViewSet, basename="drink")
+router.register(r"menu/dishes", MenuViewSet, basename="dish")
 
 urlpatterns = [
     path("", HomeViewSet.as_view({"get": "list"}), name="home"),
