@@ -1,7 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 
-from .constants.c_views import MenuBaseViewSet, DishFilter, DesertFilter, DrinkFilter
+from .constants.c_views import MenuBaseViewSet, MenuFilter
 from .serializers import (
     CategorySer, MenuSer, MenuDetSer,
     )
@@ -16,7 +16,7 @@ class HomeViewSet(MenuBaseViewSet):
 
 class MenuViewSet(MenuBaseViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_class = DishFilter
+    filterset_class = MenuFilter
     search_fields = ["title", "category__title"]
 
     def get_queryset(self):

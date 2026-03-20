@@ -2,7 +2,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, permissions
 import django_filters
 
-from shop.models import Dish, Desert, Drink
+from shop.models import Menu
 
 class MenuBaseViewSet(viewsets.ModelViewSet):
     lookup_field = "slug"
@@ -13,29 +13,10 @@ class MenuBaseViewSet(viewsets.ModelViewSet):
         return [permissions.IsAdminUser()]
 
 
-
-class DishFilter(django_filters.FilterSet):
+class MenuFilter(django_filters.FilterSet):
     min_price = django_filters.NumberFilter(field_name="price", lookup_expr="gte")
     max_price = django_filters.NumberFilter(field_name="price", lookup_expr="lte")
 
     class Meta:
-        model = Dish
-        fields = ["min_price", "max_price", "is_bestseller"]
-
-
-class DesertFilter(django_filters.FilterSet):
-    min_price = django_filters.NumberFilter(field_name="price", lookup_expr="gte")
-    max_price = django_filters.NumberFilter(field_name="price", lookup_expr="lte")
-
-    class Meta:
-        model = Desert
-        fields = ["min_price","max_price","is_bestseller"]
-
-
-class DrinkFilter(django_filters.FilterSet):
-    min_price = django_filters.NumberFilter(field_name="price", lookup_expr="gte")
-    max_price = django_filters.NumberFilter(field_name="price", lookup_expr="lte")
-
-    class Meta:
-        model = Drink
+        model = Menu
         fields = ["min_price", "max_price", "is_bestseller"]

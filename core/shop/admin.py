@@ -1,7 +1,5 @@
 from django.contrib import admin
-from shop.models import Dish, Category, Desert, Drink
+from shop.models import Menu, Category
 
 admin.site.register(Category)
-admin.site.register(Dish)
-admin.site.register(Desert)
-admin.site.register(Drink)
+admin.site.register(Menu)
