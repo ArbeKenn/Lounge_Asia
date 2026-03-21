@@ -7,7 +7,7 @@ class DeliveryType(models.TextChoices):
 
 STATUS_CHOICES = [
     ("created", "Создан"),
-    ("PENDING", "Ожидает оплаты "),
+    ("pending", "Ожидает оплаты"),
     ("paid", "Оплачен"),
     ("delivered", "Доставлен"),
     ("canceled", "Отменен"),
