@@ -1,3 +1,4 @@
+from django.contrib.auth.models import update_last_login
 from django.db import transaction
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
@@ -11,6 +12,7 @@ from orders.serializers import (
     OrderItemAddSer,
     OrderItemSetQuantitySer,
 )
+from orders.services import order_services
 
 
 class OrderViewSet(viewsets.ModelViewSet):
@@ -38,70 +40,48 @@ class OrderViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save()
 
-    @action(detail=True, methods=["post"], url_path="add-item")
-    def add_item(self, request, pk=None):
-        order = self.get_object()
+@action(detail=True, methods=["post"], url_path="add-item")
+def add_item(self, request, pk=None):
+    order = self.get_object()
 
-        if not request.user.is_staff and order.user_id != request.user.id:
-            return Response({"detail": "Нет доступа."}, status=status.HTTP_403_FORBIDDEN)
+    order_services.check_order_access(request.user, order)
 
-        serializer = OrderItemAddSer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+    serializer = OrderItemAddSer(data=request.data)
+    serializer.is_valid(raise_exception=True)
 
-        menu = serializer.validated_data["menu"]
-        quantity = serializer.validated_data["quantity"]
+    updated_order = order_services.add_item(
+        order=order,
+        menu=serializer.validated_data["menu"],
+        quantity = serializer.validated_data["quantity"],
+    )
 
-        item, created = OrderItem.objects.get_or_create(
-            order=order,
-            menu=menu,
-            defaults={
-                "quantity": quantity,
-                "price": menu.price,
-            },
-        )
+    order.update_total_price()
+    return Response(OrderReadSer(updated_order).data)
 
-        if not created:
-            item.quantity += quantity
-            item.save(update_fields=["quantity"])
+@action(detail=True, methods=["patch"], url_path="set-item")
+def set_item(self, request, pk=None):
+    order = self.get_object()
 
-        order.update_total_price()
-        return Response(OrderReadSer(order).data, status=status.HTTP_200_OK)
+    order_services.check_order_access(request.user, order)
 
-    @action(detail=True, methods=["patch"], url_path="set-item")
-    def set_item(self, request, pk=None):
-        order = self.get_object()
+    serializer = OrderItemSetQuantitySer(data=request.data)
+    serializer.is_valid(raise_exception=True)
 
-        if not request.user.is_staff and order.user_id != request.user.id:
-            return Response({"detail": "Нет доступа."}, status=status.HTTP_403_FORBIDDEN)
+    updated_order = order_services.set_item(
+        order=order,
+        item_id = serializer.validated_data["item_id"],
+        quantity = serializer.validated_data["quantity"],
+    )
 
-        serializer = OrderItemSetQuantitySer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+    return Response(OrderReadSer(updated_order).data)
 
-        item_id = serializer.validated_data["item_id"]
-        quantity = serializer.validated_data["quantity"]
+@action(detail=True, methods=["delete"], url_path="remove-item")
+def remove_item(self, request, pk=None):
+    order = self.get_object()
 
-        item = order.items.filter(id=item_id).first()
-        if not item:
-            return Response({"detail": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
+    order_services.check_order_access(request.user, order)
 
-        item.quantity = quantity
-        item.save(update_fields=["quantity"])
-        order.update_total_price()
+    order_services.remove_item(order, item_id)
 
-        return Response(OrderReadSer(order).data, status=status.HTTP_200_OK)
-
-    @action(detail=True, methods=["delete"], url_path="remove-item")
-    def remove_item(self, request, pk=None):
-        order = self.get_object()
-
-        if not request.user.is_staff and order.user_id != request.user.id:
-            return Response({"detail": "Нет доступа."}, status=status.HTTP_403_FORBIDDEN)
-
-        item_id = request.query_params.get("item_id")
-        deleted, _ = order.items.filter(id=item_id).delete()
-
-        if not deleted:
-            return Response({"detail": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
-
-        order.update_total_price()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    order.update_total_price()
+    return Response(status=status.HTTP_204_NO_CONTENT)
