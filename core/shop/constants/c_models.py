@@ -91,7 +91,7 @@ class Base(models.Model):
 
         elif self.item_type in ("dish", "desert"):
             if not self.weight:
-                errors["desert"] = "Для блюда и десерта нужно указать вес."
+                errors["weight"] = "Для блюда и десерта нужно указать вес."
 
         if errors:
             raise ValidationError(errors)

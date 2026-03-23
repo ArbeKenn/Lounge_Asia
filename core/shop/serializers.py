@@ -27,12 +27,12 @@ class MenuDetSer(BaseSer):
         weight = data.get("weight", getattr(self.instance, "weight", None))
 
 
-        if price is not None and weight is not None and price > 1000 and weight < 50:
+        if price is not None and weight is not None and price > 100 and weight < 10:
             raise serializers.ValidationError("Нелогичные данные")
 
-        if discount_price >= price:
-            if price is not None and weight is not None and discount_price > 1000 and weight < 50:
-                raise serializers.ValidationError("Скидочная цена должна быть меньше основной")
+        if discount_price is not None:
+            if price is not None and weight is not None and discount_price >= price:
+                    raise serializers.ValidationError("Скидочная цена должна быть меньше основной")
 
         return data
 
