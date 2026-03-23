@@ -9,7 +9,6 @@ def mark_paid(self, by=None, note: str = ""):
         self.note = note
     self.save(update_fields=["status", "confirmed_by", "confirmed_at", "note", "paid_at", "updated_at"])
 
-    # отметить заказ как оплаченный
     self.order.is_paid = True
     if not self.order.paid_at:
         self.order.paid_at = self.paid_at or timezone.now()

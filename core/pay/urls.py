@@ -1,10 +1,10 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
-from .views import CardView
+#from .views import
 
 router = DefaultRouter()
-router.register(r"orders", CardView, basename="orders")
+router.register(r"orders", ..., basename="orders")
 
 urlpatterns = router.urls
 
