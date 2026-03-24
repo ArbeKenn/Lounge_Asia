@@ -18,14 +18,8 @@ Lounge Asia - это backend-система для цифровизации ре
 ## Технологии
 - [Python](https://www.python.org/)
 - [Django](https://www.typescriptlang.org/)
-- [Django REST Framework]()
-- [PostgreSQL]()
-- [JWT Authentication]()
-- [django-filter]()
-- [Pillow]()
-- [python-dotenv]()
-- [python-dotenv]()
-- [psycopg2-binary]()
+- [Django REST Framework](https://www.django-rest-framework.org/)
+- [PostgreSQL](https://www.postgresql.org/)
 
 ## Функциональность
 
