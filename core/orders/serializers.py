@@ -1,6 +1,3 @@
-from decimal import Decimal
-from statistics import quantiles
-
 from django.db import transaction
 from rest_framework import serializers
 
@@ -95,7 +92,7 @@ class OrderStatusUpdateSer(serializers.ModelSerializer):
 
 class OrderItemAddSer(serializers.Serializer):
     menu = serializers.PrimaryKeyRelatedField(queryset=Menu.objects.all())
-    quantity = serializers.IntegerField(max_value=1)
+    quantity = serializers.IntegerField(min_value=1)
 
     def validate_menu(self, menu):
         if not menu.is_available:

@@ -7,11 +7,11 @@ def check_order_access(user, order):
         raise PermissionDenied("Нет доступа")
 
 @transaction.atomic
-def add_item(order, menu_item, quantity):
+def add_item(order, menu, quantity):
     item, created = OrderItem.objects.get_or_create(
         order=order,
-        menu_item=menu_item,
-        defaults={"quantity": quantity, "price": menu_item.price},
+        menu=menu,
+        defaults={"quantity": quantity, "price": menu.price},
     )
     if not created:
         item.quantity += quantity
@@ -38,7 +38,7 @@ def set_item(order, item_id, quantity):
 def remove_item(order, item_id):
     deleted, _ = order.items.filter(id=item_id).delete()
     if not deleted:
-        return NotFound("Item not found")
+        raise NotFound("Item not found")
 
     order.update_total_price()
     return order
